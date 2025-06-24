@@ -26,9 +26,9 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use("/api/v1/auth", require("./routes/authRoutes"));
-app.use("/api/v1/books", require("./routes/bookRoutes"));
-app.use("/api/v1/reviews", require("./routes/reviewRoutes"));
+app.use("/api/v1/auth", require("./routes/authRoutes.js"));
+app.use("/api/v1/books", require("./routes/bookRoutes.js"));
+app.use("/api/v1/reviews", require("./routes/reviewRoutes.js"));
 
 //Error handling middleware
 app.use(require("./middlewares/error"));
