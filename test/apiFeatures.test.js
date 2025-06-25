@@ -4,14 +4,19 @@ describe('APIFeatures', () => {
   let mockQuery;
   let apiFeatures;
 
+
   beforeEach(() => {
     mockQuery = {
       find: jest.fn().mockReturnThis(),
       sort: jest.fn().mockReturnThis(),
       skip: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),
+
     };
   });
+
+
+
 
   test('search() should call find with $or regex on title and author', () => {
     const queryStr = { keyword: 'test' };
@@ -24,6 +29,8 @@ describe('APIFeatures', () => {
       ]
     });
   });
+
+
 
   test('filter() should exclude non-filter fields and apply operators', () => {
     const queryStr = {
