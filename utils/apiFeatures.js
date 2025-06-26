@@ -1,5 +1,3 @@
-
-
 class APIFeatures {
   constructor(query, queryStr) {
     this.query = query;
@@ -10,9 +8,9 @@ class APIFeatures {
     const keyword = this.queryStr.keyword
       ? {
           $or: [
-            { title: { $regex: this.queryStr.keyword, $options: 'i' } },
-            { author: { $regex: this.queryStr.keyword, $options: 'i' } }
-          ]
+            { title: { $regex: this.queryStr.keyword, $options: "i" } },
+            { author: { $regex: this.queryStr.keyword, $options: "i" } },
+          ],
         }
       : {};
 
@@ -24,12 +22,12 @@ class APIFeatures {
     const queryCopy = { ...this.queryStr };
 
     // Remove fields that are not for filtering
-    const removeFields = ['keyword', 'limit', 'page', 'sort'];
-    removeFields.forEach(field => delete queryCopy[field]);
+    const removeFields = ["keyword", "limit", "page", "sort"];
+    removeFields.forEach((field) => delete queryCopy[field]);
 
     // Filter by genre, published year, rating range
     let queryStr = JSON.stringify(queryCopy);
-    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
@@ -37,10 +35,10 @@ class APIFeatures {
 
   sort() {
     if (this.queryStr.sort) {
-      const sortBy = this.queryStr.sort.split(',').join(' ');
+      const sortBy = this.queryStr.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
     } else {
-      this.query = this.query.sort('-createdAt');
+      this.query = this.query.sort("-createdAt");
     }
     return this;
   }

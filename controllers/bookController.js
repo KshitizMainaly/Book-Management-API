@@ -1,8 +1,7 @@
-
-const ErrorResponse = require('../utils/errorResponse');
-const Book = require('../models/Book');
-const APIFeatures = require('../utils/apiFeatures');
-const { validationResult } = require('express-validator');
+const ErrorResponse = require("../utils/errorResponse");
+const Book = require("../models/Book");
+const APIFeatures = require("../utils/apiFeatures");
+const { validationResult } = require("express-validator");
 
 // @desc    Get all books
 // @route   GET /api/v1/books
@@ -16,14 +15,14 @@ exports.getBooks = async (req, res, next) => {
       .paginate();
 
     const books = await features.query.populate({
-      path: 'user',
-      select: 'name email'
+      path: "user",
+      select: "name email",
     });
 
     res.status(200).json({
       success: true,
       count: books.length,
-      data: books
+      data: books,
     });
   } catch (err) {
     next(err);
@@ -36,8 +35,8 @@ exports.getBooks = async (req, res, next) => {
 exports.getBook = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id).populate({
-      path: 'user',
-      select: 'name email'
+      path: "user",
+      select: "name email",
     });
 
     if (!book) {
@@ -48,7 +47,7 @@ exports.getBook = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: book
+      data: book,
     });
   } catch (err) {
     next(err);
@@ -72,7 +71,7 @@ exports.createBook = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      data: book
+      data: book,
     });
   } catch (err) {
     next(err);
@@ -98,7 +97,7 @@ exports.updateBook = async (req, res, next) => {
     }
 
     // Make sure user is book owner or admin
-    if (book.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (book.user.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized to update this book`,
@@ -109,12 +108,12 @@ exports.updateBook = async (req, res, next) => {
 
     book = await Book.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     res.status(200).json({
       success: true,
-      data: book
+      data: book,
     });
   } catch (err) {
     next(err);
@@ -135,7 +134,7 @@ exports.deleteBook = async (req, res, next) => {
     }
 
     // Make sure user is book owner or admin
-    if (book.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (book.user.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized to delete this book`,
@@ -148,7 +147,7 @@ exports.deleteBook = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: {}
+      data: {},
     });
   } catch (err) {
     next(err);

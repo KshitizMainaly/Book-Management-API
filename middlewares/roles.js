@@ -1,4 +1,4 @@
-const ErrorResponse = require('../utils/errorResponse');
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.authorize = (...roles) => {
   return (req, res, next) => {

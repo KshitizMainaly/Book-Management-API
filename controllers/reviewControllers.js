@@ -1,7 +1,7 @@
-const ErrorResponse = require('../utils/errorResponse');
-const Review = require('../models/Review');
-const Book = require('../models/Book');
-const { validationResult } = require('express-validator');
+const ErrorResponse = require("../utils/errorResponse");
+const Review = require("../models/Review");
+const Book = require("../models/Book");
+const { validationResult } = require("express-validator");
 
 // @desc    Get reviews for a book
 // @route   GET /api/v1/books/:bookId/reviews
@@ -9,14 +9,14 @@ const { validationResult } = require('express-validator');
 exports.getReviews = async (req, res, next) => {
   try {
     const reviews = await Review.find({ book: req.params.bookId }).populate({
-      path: 'user',
-      select: 'name'
+      path: "user",
+      select: "name",
     });
 
     res.status(200).json({
       success: true,
       count: reviews.length,
-      data: reviews
+      data: reviews,
     });
   } catch (err) {
     next(err);
@@ -44,7 +44,7 @@ exports.addReview = async (req, res, next) => {
     // Check if user already submitted a review for this book
     const existingReview = await Review.findOne({
       book: req.params.bookId,
-      user: req.user.id
+      user: req.user.id,
     });
 
     if (existingReview) {
@@ -59,12 +59,12 @@ exports.addReview = async (req, res, next) => {
     const review = await Review.create({
       ...req.body,
       book: req.params.bookId,
-      user: req.user.id
+      user: req.user.id,
     });
 
     res.status(201).json({
       success: true,
-      data: review
+      data: review,
     });
   } catch (err) {
     next(err);
@@ -90,7 +90,7 @@ exports.updateReview = async (req, res, next) => {
     }
 
     // Make sure review belongs to user or user is admin
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized to update this review`,
@@ -101,12 +101,12 @@ exports.updateReview = async (req, res, next) => {
 
     review = await Review.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     res.status(200).json({
       success: true,
-      data: review
+      data: review,
     });
   } catch (err) {
     next(err);
@@ -127,7 +127,7 @@ exports.deleteReview = async (req, res, next) => {
     }
 
     // Make sure review belongs to user or user is admin
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized to delete this review`,
@@ -140,7 +140,7 @@ exports.deleteReview = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: {}
+      data: {},
     });
   } catch (err) {
     next(err);

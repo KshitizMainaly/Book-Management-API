@@ -1,15 +1,15 @@
 // eslint.config.mjs
-import js from '@eslint/js';
-import prettier from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
-import globals from 'globals';
-import { defineConfig } from 'eslint/config';
+import js from "@eslint/js";
+import prettier from "eslint-config-prettier";
+import prettierPlugin from "eslint-plugin-prettier";
+import globals from "globals";
+import { defineConfig } from "eslint/config";
 export default defineConfig([
   {
-    files: ['**/*.{js,mjs,cjs}'],
-    ignores: ['node_modules', 'dist', 'build', 'eslint.config.mjs'],
+    files: ["**/*.{js,mjs,cjs}"],
+    ignores: ["node_modules", "dist", "build", "eslint.config.mjs", "test"],
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: "commonjs",
       globals: {
         ...globals.node,
       },
@@ -20,7 +20,7 @@ export default defineConfig([
     rules: {
       ...js.configs.recommended.rules,
       ...prettier.rules,
-      'prettier/prettier': 'error', // Treat Prettier formatting issues as ESLint errors
+      "prettier/prettier": "error", // Treat Prettier formatting issues as ESLint errors
     },
   },
 ]);

@@ -1,7 +1,6 @@
-
-const ErrorResponse = require('../utils/errorResponse');
-const User = require('../models/User');
-const { validationResult } = require('express-validator');
+const ErrorResponse = require("../utils/errorResponse");
+const User = require("../models/User");
+const { validationResult } = require("express-validator");
 
 // @desc    Register user
 // @route   P
@@ -12,8 +11,6 @@ exports.register = async (req, res, next) => {
     return next(new ErrorResponse(errors.array()[0].msg, 400));
   }
 
-
-
   const { name, email, password, role } = req.body;
 
   try {
@@ -21,9 +18,9 @@ exports.register = async (req, res, next) => {
       name,
       email,
       password,
-      role
+      role,
     });
-/*
+    /*
 
 
 const user = new User({
@@ -36,7 +33,7 @@ role
 
 await user.save();
 */
-    
+
     sendTokenResponse(user, 200, res);
   } catch (err) {
     next(err);
@@ -56,17 +53,17 @@ exports.login = async (req, res, next) => {
 
   try {
     // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return next(new ErrorResponse('Invalid credentials', 401));
+      return next(new ErrorResponse("Invalid credentials", 401));
     }
 
     // Check if password matches
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
-      return next(new ErrorResponse('Invalid credentials', 401));
+      return next(new ErrorResponse("Invalid credentials", 401));
     }
 
     sendTokenResponse(user, 200, res);
@@ -84,7 +81,7 @@ exports.getMe = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (err) {
     next(err);
@@ -100,18 +97,15 @@ const sendTokenResponse = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true
+    httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     options.secure = true;
   }
 
-  res
-    .status(statusCode)
-    .cookie('token', token, options)
-    .json({
-      success: true,
-      token
-    });
+  res.status(statusCode).cookie("token", token, options).json({
+    success: true,
+    token,
+  });
 };
