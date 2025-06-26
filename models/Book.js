@@ -30,6 +30,7 @@ const BookSchema = new mongoose.Schema(
         "Self-Help",
         "Poetry",
         "Drama",
+        "horror",
         "Other",
       ],
     },
