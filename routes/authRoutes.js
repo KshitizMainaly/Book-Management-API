@@ -34,6 +34,6 @@ router.post(
 // @route   GET /api/v1/auth/me
 // @desc    Get current logged in user
 // @access  Private
-router.get("/me", authController.getMe);
+router.get("/me", require("../middlewares/auth").protect, authController.getMe);
 
 module.exports = router;
