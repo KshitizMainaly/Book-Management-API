@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 const connectDB = require("./config/connect.db");
 require("dotenv").config();
-// Initialize Express app
+
 const app = express();
 
 // Connect to MongoDB
@@ -21,16 +21,15 @@ app.use(express.urlencoded({ extended: false }));
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
 
-// Routes
-app.use("/api/v1/auth", require("./routes/authRoutes.js"));
-app.use("/api/v1/books", require("./routes/bookRoutes.js"));
-app.use("/api/v1/reviews", require("./routes/reviewRoutes.js"));
-
-//Error handling middleware
+// Routes - Specific routes first
+app.use("/api/v1/auth", require("./routes/authRoutes"));
+app.use("/api/v1", require("./routes/reviewRoutes"));  // Mount at root level
+app.use("/api/v1/books", require("./routes/bookRoutes"));
+// Error handling middleware
 app.use(require("./middlewares/error"));
 
 // Start server
