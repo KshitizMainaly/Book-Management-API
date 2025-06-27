@@ -71,14 +71,19 @@ API will be running at `http://localhost:5000`
 
 | Method | Endpoint                  | Description                     |
 |--------|---------------------------|---------------------------------|
-| POST   | /api/v1/auth/register   | Register new user               |
-| POST   | /api/v1/auth/login           | Login and get JWT               |
-| GET    | /api/v1/books                | Get all books                   |
+| POST   | /api/v1/auth/register     | Register new user               |
+| POST   | /api/v1/auth/login        | Login and get JWT               |
+| GET    | /api/v1/books             | Get all books                   |
 | GET    | /api/books/:id            | Get a single book               |
-| POST   | /api/v1/books                | Create a new book(only Admin can create) 
-| PUT    | /api/v1/:id            | Update a book     |
-| DELETE | /api/v1/:id            | Delete a book      |
-| POST   | /api/v1/:bookId/reviews    | Add review           |
+| POST   | /api/v1/books             | Create a new book(only Admin can create) 
+| PUT    | /api/v1/books/:id         | Update a book     |
+| DELETE | /api/v1/books/:id         | Delete a book      |
+| POST   | /api/v1/books/:bookId/reviews    | Add review           |
+| PUT  | /api/v1/:id    | update review           |
+| DELETE   | /api/v1/:id    | delete review           |
+
+
+
 
 ## 🔒 Authentication
 
