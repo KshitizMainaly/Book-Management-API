@@ -23,14 +23,15 @@ A robust and secure RESTful API for managing books and user reviews, built with 
 
 ```
 book-management-api/
+├── config/
 ├── controllers/
+├── middlewares/
 ├── models/
 ├── routes/
-├── middleware/
+├── test/
 ├── utils/
-├── config/
-├── app.js
-└── .env
+├── server.js
+├── Readme.md
 ```
 
 ## 🧪 Getting Started
