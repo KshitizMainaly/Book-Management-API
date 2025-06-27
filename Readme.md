@@ -74,7 +74,7 @@ API will be running at `http://localhost:5000`
 | POST   | /api/v1/auth/register     | Register new user               |
 | POST   | /api/v1/auth/login        | Login and get JWT               |
 | GET    | /api/v1/books             | Get all books                   |
-| GET    | /api/books/:id            | Get a single book               |
+| GET    | /api/v1/books/:id            | Get a single book               |
 | POST   | /api/v1/books             | Create a new book(only Admin can create) 
 | PUT    | /api/v1/books/:id         | Update a book     |
 | DELETE | /api/v1/books/:id         | Delete a book      |
