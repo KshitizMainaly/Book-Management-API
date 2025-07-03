@@ -1,20 +1,24 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { login } from '../services/api';
+import { toast } from 'react-hot-toast';
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { handleLogin } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await handleLogin({ email, password });
+      await login({ email, password });
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
+      const message =
+        err.response?.data?.error || 'Invalid email or password';
+      toast.error(message);
     }
   };
 
@@ -51,7 +55,10 @@ export default function Login() {
           </button>
         </form>
         <p className="mt-4 text-center">
-          New user? <a href="/register" className="text-primary">Register here</a>
+          New user?{' '}
+          <a href="/register" className="text-primary">
+            Register here
+          </a>
         </p>
       </div>
     </div>

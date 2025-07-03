@@ -6,6 +6,7 @@ const authController = require("../controllers/authController");
 // @route   POST /api/v1/auth/register
 // @desc    Register user
 // @access  Public
+
 router.post(
   "/register",
   [
