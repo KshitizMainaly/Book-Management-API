@@ -19,7 +19,7 @@ export default function App() {
 
         <Routes>
           {/* ✅ Public pages */}
-          <Route path="/books" element={<Books />} />
+          <Route path="/" element={<Books />} />
           <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

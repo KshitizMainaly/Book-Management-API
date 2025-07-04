@@ -50,8 +50,8 @@ export const updateBook = (id, bookData) => API.put(`/books/${id}`, bookData);
 export const deleteBook = (id) => API.delete(`/books/${id}`);
 
 // ✅ Reviews
-export const fetchReviews = (bookId) => publicAPI.get(`/books/${bookId}/reviews`);
-export const createReview = (bookId, reviewData) => API.post(`/books/${bookId}/reviews`, reviewData);
+export const fetchReviews = (bookId) => publicAPI.get(`/reviews/${bookId}/reviews`);
+export const createReview = (bookId, reviewData) => API.post(`/reviews/${bookId}/reviews`, reviewData);
 export const updateReview = (id, reviewData) => API.put(`/reviews/${id}`, reviewData);
 export const deleteReview = (id) => API.delete(`/reviews/${id}`);
 

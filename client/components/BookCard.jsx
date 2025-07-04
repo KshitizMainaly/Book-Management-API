@@ -1,3 +1,5 @@
+import StarRating from "./StarRating";
+
 export default function BookCard({ book }) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
