@@ -4,14 +4,17 @@ const { check } = require("express-validator");
 const reviewController = require("../controllers/reviewController");
 const authMiddleware = require("../middlewares/auth");
 
-// Public routes
-router.get("/books/:bookId/reviews", reviewController.getReviews);
+// Public route: Get all reviews for a book
+router.get("/:bookId", reviewController.getReviews);
 
-// Protected routes (require authentication)
+// ✅ NEW: Protected route to get user’s own reviews
+router.get("/me", authMiddleware.protect, reviewController.getMyReviews);
+
+// Protected routes: create, update, delete
 router.use(authMiddleware.protect);
 
 router.post(
-  "/books/:bookId/reviews",
+  "/:bookId",
   [
     check("title", "Please add a title for the review").not().isEmpty().trim(),
     check("text", "Please add some text").not().isEmpty().trim(),

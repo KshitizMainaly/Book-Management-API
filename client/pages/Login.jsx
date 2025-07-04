@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -11,13 +11,28 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email) {
+      toast.error('Please enter your email');
+      return;
+    }
+    if (!password) {
+      toast.error('Please enter your password');
+      return;
+    }
+
     try {
-      await login({ email, password });
-      navigate('/dashboard');
+      const user = await login({ email, password });
+
+      toast.success('Login successful!');
+
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
-      console.error(err);
-      const message =
-        err.response?.data?.error || 'Invalid email or password';
+      const message = err.response?.data?.error || 'Invalid email or password';
       toast.error(message);
     }
   };
@@ -49,7 +64,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="w-full bg-purple-300 text-shadow-red-950 py-2 rounded hover:bg-secondary"
+            className="w-full bg-purple-300 py-2 rounded hover:bg-secondary"
           >
             Login
           </button>

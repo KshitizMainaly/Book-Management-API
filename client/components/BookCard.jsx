@@ -1,10 +1,20 @@
 import StarRating from "./StarRating";
-
+import axios from "axios";
 export default function BookCard({ book }) {
+
+
+const generateRandomImg = () => {
+  const id = Math.floor(Math.random() * 1000); // max ~1084 for available images
+  return `https://picsum.photos/id/${id}/200/300`;
+};
+
+
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <img 
-        src={book.coverImage || '/default-book.jpg'} 
+        // src={book.coverImage || '/default-book.jpg'} 
+
+src={generateRandomImg()}
         alt={book.title}
         className="w-full h-48 object-cover"
       />

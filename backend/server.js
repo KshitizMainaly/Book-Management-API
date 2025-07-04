@@ -27,7 +27,7 @@ app.use(limiter);
 
 // Routes - Specific routes first
 app.use("/api/v1/auth", require("./routes/authRoutes"));
-app.use("/api/v1", require("./routes/reviewRoutes"));  // Mount at root level
+app.use("/api/v1/reviews", require("./routes/reviewRoutes"));  // Mount at root level
 app.use("/api/v1/books", require("./routes/bookRoutes"));
 // Error handling middleware
 app.use(require("./middlewares/error"));

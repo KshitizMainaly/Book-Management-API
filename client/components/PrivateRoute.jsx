@@ -1,16 +1,10 @@
-import { useAuth } from "../context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-export default function PrivateRoute({ children, adminOnly = false }) {
-  const { user, isAdmin } = useAuth();
+export default function PrivateRoute() {
+  const { isAuthenticated, loading } = useAuth();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (loading) return null; // Or a spinner/loading UI
 
-  if (adminOnly && !isAdmin) {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 }

@@ -1,15 +1,18 @@
 const ErrorResponse = require('../utils/errorResponse');
 const Review = require('../models/Review');
 const Book = require('../models/Book');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 
-// Helper function for error handling
+// Helper for logging
 const handleControllerError = (err, context) => {
   console.error(`Error in ${context}:`, err);
   return new ErrorResponse(err.message, err.statusCode || 500);
 };
 
+// @desc    Get all reviews for a book
+// @route   GET /api/v1/reviews/:bookId
+// @access  Public
 exports.getReviews = async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.bookId)) {
@@ -30,6 +33,9 @@ exports.getReviews = async (req, res, next) => {
   }
 };
 
+// @desc    Add a review to a book
+// @route   POST /api/v1/reviews/:bookId
+// @access  Private
 exports.addReview = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -37,7 +43,6 @@ exports.addReview = async (req, res, next) => {
   }
 
   try {
-    // Validate book ID format
     if (!mongoose.Types.ObjectId.isValid(req.params.bookId)) {
       return next(new ErrorResponse('Invalid book ID format', 400));
     }
@@ -47,7 +52,6 @@ exports.addReview = async (req, res, next) => {
       return next(new ErrorResponse(`Book not found with id ${req.params.bookId}`, 404));
     }
 
-    // Check for existing review
     const existingReview = await Review.findOne({
       book: req.params.bookId,
       user: req.user._id
@@ -65,7 +69,6 @@ exports.addReview = async (req, res, next) => {
       user: req.user._id
     });
 
-    // Populate user data in response
     await review.populate('user', 'name email');
 
     res.status(201).json({
@@ -74,14 +77,18 @@ exports.addReview = async (req, res, next) => {
     });
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new ErrorResponse(Object.values(err.errors).map(e => e.message).join(', '), 400));
+      return next(
+        new ErrorResponse(
+          Object.values(err.errors).map(e => e.message).join(', '),
+          400
+        )
+      );
     }
     next(handleControllerError(err, 'addReview'));
   }
 };
 
-
-// @desc    Update review
+// @desc    Update a review
 // @route   PUT /api/v1/reviews/:id
 // @access  Private
 exports.updateReview = async (req, res, next) => {
@@ -92,14 +99,10 @@ exports.updateReview = async (req, res, next) => {
 
   try {
     let review = await Review.findById(req.params.id);
-
     if (!review) {
-      return next(
-        new ErrorResponse(`No review with the id of ${req.params.id}`, 404)
-      );
+      return next(new ErrorResponse(`No review with the id of ${req.params.id}`, 404));
     }
 
-    // Make sure review belongs to user or user is admin
     if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(
         new ErrorResponse(
@@ -119,24 +122,20 @@ exports.updateReview = async (req, res, next) => {
       data: review
     });
   } catch (err) {
-    next(err);
+    next(handleControllerError(err, 'updateReview'));
   }
 };
 
-// @desc    Delete review
+// @desc    Delete a review
 // @route   DELETE /api/v1/reviews/:id
 // @access  Private
 exports.deleteReview = async (req, res, next) => {
   try {
     const review = await Review.findById(req.params.id);
-
     if (!review) {
-      return next(
-        new ErrorResponse(`No review with the id of ${req.params.id}`, 404)
-      );
+      return next(new ErrorResponse(`No review with the id of ${req.params.id}`, 404));
     }
 
-    // Make sure review belongs to user or user is admin
     if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(
         new ErrorResponse(
@@ -153,6 +152,25 @@ exports.deleteReview = async (req, res, next) => {
       data: {}
     });
   } catch (err) {
-    next(err);
+    next(handleControllerError(err, 'deleteReview'));
+  }
+};
+
+// ✅ NEW: Get reviews of the current logged-in user
+// @route   GET /api/v1/reviews/me
+// @access  Private
+exports.getMyReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({ user: req.user._id })
+      .populate('book', 'title')
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      data: reviews
+    });
+  } catch (err) {
+    next(handleControllerError(err, 'getMyReviews'));
   }
 };

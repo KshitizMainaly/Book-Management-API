@@ -6,10 +6,8 @@ import {
 } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
-// Create context
 export const AuthContext = createContext();
 
-// Context provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,8 +17,10 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         const { data } = await getMe();
+        console.log("User loaded:", data);
         setUser(data.data);
       } catch (err) {
+        console.error("getMe error:", err);
         localStorage.removeItem("token");
       } finally {
         setLoading(false);
@@ -30,17 +30,39 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-    const { data } = await apiLogin(credentials);
-    localStorage.setItem("token", data.token);
-    setUser(data.user);
-    navigate("/books");
+    try {
+      const { data } = await apiLogin(credentials);
+      localStorage.setItem("token", data.token);
+      setUser(data.user);
+
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+      return data.user;
+    } catch (err) {
+      // re-throw error so UI can handle it
+      throw err;
+    }
   };
 
   const register = async (userData) => {
-    const { data } = await apiRegister(userData);
-    localStorage.setItem("token", data.token);
-    setUser(data.user);
-    navigate("/books");
+    try {
+      const { data } = await apiRegister(userData);
+      localStorage.setItem("token", data.token);
+      setUser(data.user);
+
+      if (data.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+      return data.user;
+    } catch (err) {
+      // re-throw error so UI can handle it
+      throw err;
+    }
   };
 
   const logout = () => {
@@ -51,6 +73,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    setUser,
     loading,
     login,
     register,
@@ -66,7 +89,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Custom hook for consuming context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
