@@ -1,6 +1,9 @@
+
+
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { createReview } from '../services/api';
+import StarRating from './StarRating';
 
 export default function ReviewForm({ bookId }) {
   const [text, setText] = useState('');
@@ -38,7 +41,7 @@ export default function ReviewForm({ bookId }) {
         />
         <button
           type="submit"
-          className="bg-primary text-white px-4 py-2 rounded hover:bg-secondary"
+          className="bg-amber-200 text-black px-4 py-2 rounded hover:bg-secondary"
         >
           Submit Review
         </button>

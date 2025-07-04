@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom";
+// src/components/Navbar.jsx
+
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { User } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <nav className="bg-black text-white sticky top-0 z-50 shadow-md">
@@ -31,15 +39,17 @@ export default function Navbar() {
                 </Link>
               )}
 
-              <Link
-                to="/dashboard"
-                className="hover:text-gray-300 transition-colors duration-200"
-              >
-                Dashboard
-              </Link>
+              {user.role !== "admin" && (
+                <Link
+                  to="/dashboard"
+                  className="hover:text-gray-300 transition-colors duration-200"
+                >
+                  Dashboard
+                </Link>
+              )}
 
               <button
-                onClick={logout}
+                onClick={handleLogout}
                 className="hover:text-gray-300 transition-colors duration-200"
               >
                 Logout
