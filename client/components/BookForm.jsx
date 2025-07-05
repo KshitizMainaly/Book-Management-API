@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import { createBook, updateBook } from '../services/api';
+import { toast } from 'react-hot-toast';
 
 export default function BookForm({ book, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
@@ -24,7 +25,6 @@ export default function BookForm({ book, onSuccess, onCancel }) {
           : '',
       });
     } else {
-      // Reset form if no book is being edited
       setFormData({
         title: '',
         author: '',
@@ -41,12 +41,16 @@ export default function BookForm({ book, onSuccess, onCancel }) {
     try {
       if (book) {
         await updateBook(book._id, formData);
+        toast.success('Book updated successfully');
       } else {
         await createBook(formData);
+        toast.success('Book created successfully');
       }
       onSuccess();
     } catch (err) {
-      console.error(err);
+      const message =
+        err?.response?.data?.error || 'Failed to create or update book';
+      toast.error(message);
     }
   };
 
@@ -148,7 +152,7 @@ export default function BookForm({ book, onSuccess, onCancel }) {
       <div className="flex items-center gap-4 mt-4">
         <button
           type="submit"
-          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-secondary"
+          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
         >
           {book ? 'Update' : 'Create'} Book
         </button>
@@ -156,7 +160,7 @@ export default function BookForm({ book, onSuccess, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className= "text-gray-600 hover:underline"
+            className="text-gray-600 hover:underline"
           >
             Cancel
           </button>

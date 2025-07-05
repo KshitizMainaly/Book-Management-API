@@ -70,6 +70,6 @@ BookSchema.virtual("reviews", {
 });
 
 // Create text index for search
-BookSchema.index({ title: "text", author: "text" });
+BookSchema.index({ title: "text", author: "text" }, { unique: true });
 
 module.exports = mongoose.model("Book", BookSchema);

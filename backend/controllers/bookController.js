@@ -82,8 +82,18 @@ exports.createBook = async (req, res, next) => {
   try {
     // Add user to req.body
     req.body.user = req.user.id;
+// Check for duplicate based on title and author
+const existing = await Book.findOne({
+  title: req.body.title,
+  author: req.body.author,
+});
+if (existing) {
+  return next(
+    new ErrorResponse('Book with the same title and author already exists', 400)
+  );
+}
 
-    const book = await Book.create(req.body);
+const book = await Book.create(req.body);
 
     res.status(201).json({
       success: true,
@@ -159,7 +169,7 @@ exports.deleteBook = async (req, res, next) => {
       );
     }
 
-    await book.remove();
+    await book.deleteOne();
 
     res.status(200).json({
       success: true,
