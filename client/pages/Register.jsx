@@ -1,14 +1,14 @@
-import { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'user',
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
   });
 
   const { register } = useContext(AuthContext);
@@ -17,30 +17,30 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Client-side validations
     if (formData.name.length < 3) {
-      toast.error('Name must be at least 3 characters');
+      toast.error("Name must be at least 3 characters");
       return;
     }
     if (formData.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
     try {
       const user = await register(formData);
+      toast.success("Registration successful!");
 
-      toast.success('Registration successful!');
-
-      // Redirect based on role
-      if (user.role === 'admin') {
-        navigate('/admin/dashboard');
+      if (user.role === "admin") {
+        navigate("/admin/dashboard");
       } else {
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
     } catch (err) {
-      // Show backend validation error or generic
-      const message = err.response?.data?.error || 'Registration failed';
+      console.error(err);
+      const message =
+        err?.response?.data?.error ||
+        err?.message ||
+        "Registration failed. Please try again.";
       toast.error(message);
     }
   };
@@ -64,7 +64,6 @@ export default function Register() {
               required
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-300 mb-2">Email</label>
             <input
@@ -77,7 +76,6 @@ export default function Register() {
               required
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-300 mb-2">Password</label>
             <input
@@ -90,7 +88,6 @@ export default function Register() {
               required
             />
           </div>
-
           <div className="mb-4">
             <label className="block text-gray-300 mb-2">Role</label>
             <select
@@ -104,7 +101,6 @@ export default function Register() {
               <option value="admin">Admin</option>
             </select>
           </div>
-
           <button
             type="submit"
             className="w-full bg-white text-black py-2 rounded hover:bg-gray-300"
@@ -116,3 +112,4 @@ export default function Register() {
     </div>
   );
 }
+

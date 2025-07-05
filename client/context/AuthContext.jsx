@@ -1,9 +1,6 @@
+import { login as apiLogin, register as apiRegister } from "../services/api";
 import { createContext, useState, useEffect, useContext } from "react";
-import {
-  getMe,
-  login as apiLogin,
-  register as apiRegister,
-} from "../services/api";
+import { getMe } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
@@ -17,11 +14,16 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         const { data } = await getMe();
-        console.log("User loaded:", data);
         setUser(data.data);
       } catch (err) {
-        console.error("getMe error:", err);
-        localStorage.removeItem("token");
+        // If 401 Unauthorized, silently clear user and token without logging error
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem("token");
+          setUser(null);
+        } else {
+          // For other errors, you can log if you want
+          console.error("getMe error:", err);
+        }
       } finally {
         setLoading(false);
       }
@@ -42,8 +44,7 @@ export const AuthProvider = ({ children }) => {
       }
       return data.user;
     } catch (err) {
-      // re-throw error so UI can handle it
-      throw err;
+      throw err; // re-throw for UI handling
     }
   };
 
@@ -60,8 +61,7 @@ export const AuthProvider = ({ children }) => {
       }
       return data.user;
     } catch (err) {
-      // re-throw error so UI can handle it
-      throw err;
+      throw err; // re-throw for UI handling
     }
   };
 
@@ -82,11 +82,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin: user?.role === "admin",
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
@@ -96,3 +92,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+

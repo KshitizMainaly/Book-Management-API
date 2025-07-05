@@ -4,8 +4,8 @@ const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  // Log to console for dev
-  console.log(err.stack.red);
+  // Log stack trace in red (dev)
+  console.log(err.stack);
 
   // Mongoose bad ObjectId
   if (err.name === "CastError") {
@@ -13,7 +13,7 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 404);
   }
 
-  // Mongoose duplicate key
+  // Mongoose duplicate key error
   if (err.code === 11000) {
     const message = "Duplicate field value entered";
     error = new ErrorResponse(message, 400);
@@ -21,8 +21,9 @@ const errorHandler = (err, req, res, next) => {
 
   // Mongoose validation error
   if (err.name === "ValidationError") {
-    const message = Object.values(err.errors).map((val) => val.message);
-    error = new ErrorResponse(message, 400);
+    // Collect all error messages into one string separated by commas
+    const messages = Object.values(err.errors).map((val) => val.message);
+    error = new ErrorResponse(messages.join(", "), 400);
   }
 
   res.status(error.statusCode || 500).json({
@@ -32,3 +33,4 @@ const errorHandler = (err, req, res, next) => {
 };
 
 module.exports = errorHandler;
+
