@@ -1,32 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; 
 import { createBook, updateBook } from '../services/api';
 
 export default function BookForm({ book, onSuccess, onCancel }) {
   const [formData, setFormData] = useState({
-    title: book?.title || '',
-    author: book?.author || '',
-    genre: book?.genre || 'Fiction',
-    rating: book?.rating || 3,
-    description: book?.description || '',
-    publishedDate: book?.publishedDate ? book.publishedDate.slice(0, 10) : '',
+    title: '',
+    author: '',
+    genre: 'Fiction',
+    rating: 3,
+    description: '',
+    publishedDate: '',
   });
 
-  const GENRE_OPTIONS = [
-    "Fiction",
-    "Non-Fiction",
-    "Science Fiction",
-    "Fantasy",
-    "Mystery",
-    "Thriller",
-    "Romance",
-    "Biography",
-    "History",
-    "Self-Help",
-    "Poetry",
-    "Drama",
-    "horror",
-    "Other",
-  ];
+  useEffect(() => {
+    if (book) {
+      setFormData({
+        title: book.title || '',
+        author: book.author || '',
+        genre: book.genre || 'Fiction',
+        rating: book.rating || 3,
+        description: book.description || '',
+        publishedDate: book.publishedDate
+          ? new Date(book.publishedDate).toISOString().substring(0, 10)
+          : '',
+      });
+    } else {
+      // Reset form if no book is being edited
+      setFormData({
+        title: '',
+        author: '',
+        genre: 'Fiction',
+        rating: 3,
+        description: '',
+        publishedDate: '',
+      });
+    }
+  }, [book]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +51,10 @@ export default function BookForm({ book, onSuccess, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 bg-gray-50 rounded-lg shadow">
+    <form
+      onSubmit={handleSubmit}
+      className="mb-8 p-6 bg-gray-50 rounded-lg shadow-md"
+    >
       <h2 className="text-xl font-bold mb-4">
         {book ? 'Edit Book' : 'Add New Book'}
       </h2>
@@ -83,29 +94,31 @@ export default function BookForm({ book, onSuccess, onCancel }) {
               setFormData({ ...formData, genre: e.target.value })
             }
             className="w-full p-2 border rounded"
-            required
           >
-            {GENRE_OPTIONS.map((genre) => (
-              <option key={genre} value={genre}>{genre}</option>
+            {[
+              'Fiction',
+              'Non-Fiction',
+              'Science Fiction',
+              'Fantasy',
+              'Mystery',
+              'Thriller',
+              'Romance',
+              'Biography',
+              'History',
+              'Self-Help',
+              'Poetry',
+              'Drama',
+              'Horror',
+              'Other',
+            ].map((genre) => (
+              <option key={genre} value={genre}>
+                {genre}
+              </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className="block mb-1">Rating (1–5)</label>
-          <input
-            type="number"
-            value={formData.rating}
-            onChange={(e) =>
-              setFormData({ ...formData, rating: Number(e.target.value) })
-            }
-            min="1"
-            max="5"
-            className="w-full p-2 border rounded"
-          />
-        </div>
-
-        <div className="md:col-span-2">
           <label className="block mb-1">Published Date</label>
           <input
             type="date"
@@ -125,26 +138,25 @@ export default function BookForm({ book, onSuccess, onCancel }) {
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            rows="4"
             className="w-full p-2 border rounded"
+            rows="4"
             required
-          />
+          ></textarea>
         </div>
       </div>
 
-      <div className="flex gap-4 mt-4">
+      <div className="flex items-center gap-4 mt-4">
         <button
           type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded hover:bg-secondary"
+          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-secondary"
         >
           {book ? 'Update' : 'Create'} Book
         </button>
-
-        {book && onCancel && (
+        {book && (
           <button
             type="button"
             onClick={onCancel}
-            className="bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400"
+            className= "text-gray-600 hover:underline"
           >
             Cancel
           </button>

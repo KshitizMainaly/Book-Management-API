@@ -39,6 +39,11 @@ export default function BookDetails() {
   };
 
   if (loading) return <div className="text-center py-8">Loading...</div>;
+const generateRandomImg = () => {
+    const randomId = Math.floor(Math.random() * 1000);
+    return `https://picsum.photos/id/${randomId}/600/800`;
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -47,7 +52,8 @@ export default function BookDetails() {
         <div className="md:flex">
           <div className="md:w-1/3">
             <img
-              src={book.coverImage || '/default-book.jpg'}
+              // src={book.coverImage || '/default-book.jpg'}
+              src={generateRandomImg()}
               alt={book.title}
               className="w-full h-full object-cover"
             />

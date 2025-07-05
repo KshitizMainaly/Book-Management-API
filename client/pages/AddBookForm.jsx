@@ -1,6 +1,4 @@
-// src/pages/AddBookForm.jsx
-
-import BookForm from '../components/BookForm';
+import BookForm from "../components/BookForm";
 
 export default function AddBookForm() {
   return (

@@ -1,47 +1,81 @@
-
-
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { createReview } from '../services/api';
 import StarRating from './StarRating';
 
-export default function ReviewForm({ bookId }) {
+export default function ReviewForm({ onSubmit }) {
+  const { user } = useContext(AuthContext);
+  const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
-  const { user } = useContext(AuthContext);
+  const [error, setError] = useState('');
+
+  if (!user) {
+    return (
+      <div className="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded">
+        Please <a href="/login" className="underline text-blue-600">log in</a> or <a href="/register" className="underline text-blue-600">register</a> to submit a review.
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
-      await createReview(bookId, { text, rating });
+      await onSubmit({ title, text, rating });
+      setTitle('');
       setText('');
-      // Refresh reviews list
+      setRating(5);
     } catch (err) {
       console.error(err);
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     }
   };
 
-  if (!user) return null;
-
   return (
-    <form onSubmit={handleSubmit} className="mb-8">
-      <h3 className="font-medium mb-2">Add Your Review</h3>
+    <form onSubmit={handleSubmit} className="mb-8 p-4 border border-gray-200 rounded shadow-sm bg-white">
+      <h3 className="text-xl font-semibold mb-4">Add Your Review</h3>
+
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      <input
+        type="text"
+        placeholder="Review Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        required
+        className="w-full mb-3 p-2 border border-gray-300 rounded"
+      />
+
       <textarea
+        placeholder="Your review..."
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className="w-full p-2 border rounded mb-2"
-        rows="3"
         required
+        rows="4"
+        className="w-full mb-3 p-2 border border-gray-300 rounded"
       />
+
       <div className="flex items-center justify-between">
-        <StarRating 
-          rating={rating} 
-          editable={true} 
-          onRatingChange={setRating} 
-        />
+        <div className="flex items-center">
+          <span className="mr-2 font-medium text-gray-700">Your Rating:</span>
+          <StarRating
+            rating={rating}
+            editable={true}
+            onRatingChange={setRating}
+          />
+        </div>
+
         <button
           type="submit"
-          className="bg-amber-200 text-black px-4 py-2 rounded hover:bg-secondary"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Submit Review
         </button>
@@ -49,3 +83,4 @@ export default function ReviewForm({ bookId }) {
     </form>
   );
 }
+
