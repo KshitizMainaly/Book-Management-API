@@ -12,30 +12,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      toast.error("Email is required");
-      return;
-    }
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-
     try {
-      const user = await login({ email, password });
+      await login({ email, password });
       toast.success("Login successful!");
-
-      if (user.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
     } catch (err) {
       console.error(err);
-      const message =
-        err?.response?.data?.error ||
-        err?.message ||
-        "Invalid email or password";
+      const message = err.response?.data?.error || "Invalid email or password";
       toast.error(message);
     }
   };
@@ -43,7 +25,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="bg-gray-900 p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">
+          Login
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-300 mb-2">Email</label>

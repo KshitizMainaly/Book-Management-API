@@ -1,22 +1,26 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from '../context/AuthContext';
-import PrivateRoute from '../components/PrivateRoute';
-import AdminRoute from '../components/AdminRoute';
-import Navbar from '../components/Navbar';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "../context/AuthContext";
+import PrivateRoute from "../components/PrivateRoute";
+import AdminRoute from "../components/AdminRoute";
+import Navbar from "../components/Navbar";
+import { Toaster } from "react-hot-toast"; 
 
-import Books from '../pages/Books';
-import BookDetails from '../pages/BookDetails';
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Dashboard from '../pages/Dashboard';
-import AdminDashboard from '../pages/AdminDashboard';
-import NotFound from '../pages/NotFound';
+import Books from "../pages/Books";
+import BookDetails from "../pages/BookDetails";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Dashboard from "../pages/Dashboard";
+import AdminDashboard from "../pages/AdminDashboard";
+import NotFound from "../pages/NotFound";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Navbar />
+
+        {/* ✅ Add this Toaster here */}
+        <Toaster position="top-right" reverseOrder={false} />
 
         <Routes>
           <Route path="/" element={<Books />} />
