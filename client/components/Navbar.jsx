@@ -1,8 +1,7 @@
-// src/components/Navbar.jsx
-
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { User } from "lucide-react";
+import { GoBook } from "react-icons/go";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -16,8 +15,8 @@ export default function Navbar() {
   return (
     <nav className="bg-black text-white sticky top-0 z-50 shadow-md">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold hover:text-gray-300">
-          📚 BookStore
+        <Link to="/" className="text-2xl font-bold hover:text-gray-300 flex gap-2 items-center  ">
+          <GoBook /> BookStore
         </Link>
 
         <div className="flex items-center space-x-6">

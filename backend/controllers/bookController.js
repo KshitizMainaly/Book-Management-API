@@ -14,10 +14,18 @@ exports.getBooks = async (req, res, next) => {
       .sort()
       .paginate();
 
-    const books = await features.query.populate({
-      path: "user",
-      select: "name email",
-    });
+    const books = await features.query
+      .populate({
+        path: "user",
+        select: "name email",
+      })
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "user",
+          select: "name email",
+        },
+      });
 
     res.status(200).json({
       success: true,
@@ -34,10 +42,18 @@ exports.getBooks = async (req, res, next) => {
 // @access  Public
 exports.getBook = async (req, res, next) => {
   try {
-    const book = await Book.findById(req.params.id).populate({
-      path: "user",
-      select: "name email",
-    });
+    const book = await Book.findById(req.params.id)
+      .populate({
+        path: "user",
+        select: "name email",
+      })
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "user",
+          select: "name email",
+        },
+      });
 
     if (!book) {
       return next(

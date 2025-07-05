@@ -1,8 +1,8 @@
-const ErrorResponse = require('../utils/errorResponse');
-const Review = require('../models/Review');
-const Book = require('../models/Book');
-const mongoose = require('mongoose');
-const { validationResult } = require('express-validator');
+const ErrorResponse = require("../utils/errorResponse");
+const Review = require("../models/Review");
+const Book = require("../models/Book");
+const mongoose = require("mongoose");
+const { validationResult } = require("express-validator");
 
 // Helper for logging
 const handleControllerError = (err, context) => {
@@ -16,20 +16,20 @@ const handleControllerError = (err, context) => {
 exports.getReviews = async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.bookId)) {
-      return next(new ErrorResponse('Invalid book ID format', 400));
+      return next(new ErrorResponse("Invalid book ID format", 400));
     }
 
     const reviews = await Review.find({ book: req.params.bookId })
-      .populate('user', 'name email')
+      .populate("user", "name email")
       .lean();
 
     res.status(200).json({
       success: true,
       count: reviews.length,
-      data: reviews
+      data: reviews,
     });
   } catch (err) {
-    next(handleControllerError(err, 'getReviews'));
+    next(handleControllerError(err, "getReviews"));
   }
 };
 
@@ -44,21 +44,25 @@ exports.addReview = async (req, res, next) => {
 
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.bookId)) {
-      return next(new ErrorResponse('Invalid book ID format', 400));
+      return next(new ErrorResponse("Invalid book ID format", 400));
     }
 
     const book = await Book.findById(req.params.bookId);
     if (!book) {
-      return next(new ErrorResponse(`Book not found with id ${req.params.bookId}`, 404));
+      return next(
+        new ErrorResponse(`Book not found with id ${req.params.bookId}`, 404)
+      );
     }
 
     const existingReview = await Review.findOne({
       book: req.params.bookId,
-      user: req.user._id
+      user: req.user._id,
     });
 
     if (existingReview) {
-      return next(new ErrorResponse('You have already reviewed this book', 400));
+      return next(
+        new ErrorResponse("You have already reviewed this book", 400)
+      );
     }
 
     const review = await Review.create({
@@ -66,25 +70,27 @@ exports.addReview = async (req, res, next) => {
       text: req.body.text,
       rating: req.body.rating,
       book: req.params.bookId,
-      user: req.user._id
+      user: req.user._id,
     });
 
-    await review.populate('user', 'name email');
+    await review.populate("user", "name email");
 
     res.status(201).json({
       success: true,
-      data: review
+      data: review,
     });
   } catch (err) {
-    if (err.name === 'ValidationError') {
+    if (err.name === "ValidationError") {
       return next(
         new ErrorResponse(
-          Object.values(err.errors).map(e => e.message).join(', '),
+          Object.values(err.errors)
+            .map((e) => e.message)
+            .join(", "),
           400
         )
       );
     }
-    next(handleControllerError(err, 'addReview'));
+    next(handleControllerError(err, "addReview"));
   }
 };
 
@@ -100,10 +106,12 @@ exports.updateReview = async (req, res, next) => {
   try {
     let review = await Review.findById(req.params.id);
     if (!review) {
-      return next(new ErrorResponse(`No review with the id of ${req.params.id}`, 404));
+      return next(
+        new ErrorResponse(`No review with the id of ${req.params.id}`, 404)
+      );
     }
 
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized to update this review`,
@@ -114,15 +122,15 @@ exports.updateReview = async (req, res, next) => {
 
     review = await Review.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     res.status(200).json({
       success: true,
-      data: review
+      data: review,
     });
   } catch (err) {
-    next(handleControllerError(err, 'updateReview'));
+    next(handleControllerError(err, "updateReview"));
   }
 };
 
@@ -133,10 +141,12 @@ exports.deleteReview = async (req, res, next) => {
   try {
     const review = await Review.findById(req.params.id);
     if (!review) {
-      return next(new ErrorResponse(`No review with the id of ${req.params.id}`, 404));
+      return next(
+        new ErrorResponse(`No review with the id of ${req.params.id}`, 404)
+      );
     }
 
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
       return next(
         new ErrorResponse(
           `User ${req.user.id} is not authorized to delete this review`,
@@ -149,10 +159,10 @@ exports.deleteReview = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: {}
+      data: {},
     });
   } catch (err) {
-    next(handleControllerError(err, 'deleteReview'));
+    next(handleControllerError(err, "deleteReview"));
   }
 };
 
@@ -162,15 +172,15 @@ exports.deleteReview = async (req, res, next) => {
 exports.getMyReviews = async (req, res, next) => {
   try {
     const reviews = await Review.find({ user: req.user._id })
-      .populate('book', 'title')
+      .populate("book", "title")
       .lean();
 
     res.status(200).json({
       success: true,
       count: reviews.length,
-      data: reviews
+      data: reviews,
     });
   } catch (err) {
-    next(handleControllerError(err, 'getMyReviews'));
+    next(handleControllerError(err, "getMyReviews"));
   }
 };

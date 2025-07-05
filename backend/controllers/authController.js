@@ -8,7 +8,10 @@ exports.register = async (req, res, next) => {
     // Combine errors into single message string for clarity
     return res.status(400).json({
       success: false,
-      error: errors.array().map(e => e.msg).join(", "),
+      error: errors
+        .array()
+        .map((e) => e.msg)
+        .join(", "),
     });
   }
 
@@ -36,7 +39,10 @@ exports.login = async (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      error: errors.array().map(e => e.msg).join(", "),
+      error: errors
+        .array()
+        .map((e) => e.msg)
+        .join(", "),
     });
   }
 
@@ -88,4 +94,3 @@ const sendTokenResponse = (user, statusCode, res) => {
     },
   });
 };
-

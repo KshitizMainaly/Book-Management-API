@@ -1,37 +1,35 @@
-import { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import StarRating from './StarRating';
+import { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import StarRating from "./StarRating";
 
-export default function ReviewForm({ onSubmit }) {
+export default function ReviewForm({ bookId, onSubmit }) {
   const { user } = useContext(AuthContext);
-  const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
   const [rating, setRating] = useState(5);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   if (!user) {
     return (
       <div className="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded">
-        Please <a href="/login" className="underline text-blue-600">log in</a> or <a href="/register" className="underline text-blue-600">register</a> to submit a review.
+        Please <a href="/login" className="underline text-blue-600">log in</a> or{" "}
+        <a href="/register" className="underline text-blue-600">register</a> to submit a review.
       </div>
     );
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     try {
       await onSubmit({ title, text, rating });
-      setTitle('');
-      setText('');
+      setTitle("");
+      setText("");
       setRating(5);
     } catch (err) {
       console.error(err);
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error);
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
+      const msg = err.response?.data?.error || "Something went wrong.";
+      setError(msg);
     }
   };
 
@@ -40,9 +38,7 @@ export default function ReviewForm({ onSubmit }) {
       <h3 className="text-xl font-semibold mb-4">Add Your Review</h3>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-          {error}
-        </div>
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>
       )}
 
       <input
@@ -66,11 +62,7 @@ export default function ReviewForm({ onSubmit }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <span className="mr-2 font-medium text-gray-700">Your Rating:</span>
-          <StarRating
-            rating={rating}
-            editable={true}
-            onRatingChange={setRating}
-          />
+          <StarRating rating={rating} editable={true} onRatingChange={setRating} />
         </div>
 
         <button

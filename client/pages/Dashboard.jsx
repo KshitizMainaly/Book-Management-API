@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { fetchBooks } from '../services/api';
-import ReviewForm from '../components/ReviewForm';
-import StarRating from '../components/StarRating';
+import { useState, useEffect } from "react";
+import { fetchBooks, createReview } from "../services/api";
+import ReviewForm from "../components/ReviewForm";
+import StarRating from "../components/StarRating";
+import { toast } from "react-hot-toast";
 
 function Review({ review }) {
   const [likes, setLikes] = useState(review.likes || 0);
@@ -11,14 +12,14 @@ function Review({ review }) {
     if (!liked) {
       setLikes(likes + 1);
       setLiked(true);
-      // TODO: call backend to persist likes
+      // Fake like; real persistence would call an API
     }
   };
 
   return (
     <div className="border-b border-gray-200 py-3">
       <div className="flex justify-between items-center">
-        <h4 className="font-semibold">{review.user?.name || 'Anonymous'}</h4>
+        <h4 className="font-semibold">{review.user?.name || "Anonymous"}</h4>
         <StarRating rating={review.rating} />
       </div>
       <p className="text-gray-700 mt-1">{review.text}</p>
@@ -28,22 +29,18 @@ function Review({ review }) {
           onClick={handleLike}
           disabled={liked}
           className={`flex items-center space-x-1 text-sm ${
-            liked ? 'text-blue-500 cursor-default' : 'text-gray-400 hover:text-blue-600'
+            liked ? "text-blue-500 cursor-default" : "text-gray-400 hover:text-blue-600"
           }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
-            fill={liked ? 'currentColor' : 'none'}
+            fill={liked ? "currentColor" : "none"}
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 15l7-7 7 7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
           </svg>
           <span>{likes}</span>
         </button>
@@ -61,7 +58,8 @@ export default function Dashboard() {
       const { data } = await fetchBooks();
       setBooks(data.data || []);
     } catch (err) {
-      console.error('Failed to load books:', err);
+      console.error("Failed to load books:", err);
+      toast.error("Could not load books");
     } finally {
       setLoading(false);
     }
@@ -70,6 +68,18 @@ export default function Dashboard() {
   useEffect(() => {
     loadBooks();
   }, []);
+
+  const handleReviewSubmit = async (bookId, formData) => {
+    try {
+      await createReview(bookId, formData);
+      toast.success("Review submitted!");
+      await loadBooks();
+    } catch (err) {
+      console.error(err);
+      const msg = err.response?.data?.error || "Review failed.";
+      toast.error(msg);
+    }
+  };
 
   if (loading) return <div className="text-center mt-10">Loading...</div>;
 
@@ -109,10 +119,14 @@ export default function Dashboard() {
             </div>
 
             {/* Add review form */}
-            <ReviewForm bookId={book._id} onSuccess={loadBooks} />
+            <ReviewForm
+              bookId={book._id}
+              onSubmit={(formData) => handleReviewSubmit(book._id, formData)}
+            />
           </div>
         ))}
       </div>
     </div>
   );
 }
+

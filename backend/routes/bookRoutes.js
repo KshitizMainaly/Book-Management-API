@@ -39,10 +39,6 @@ router.put(
   bookController.updateBook
 );
 
-router.delete(
-  "/:id",
-  rolesMiddleware("admin"),
-  bookController.deleteBook
-);
+router.delete("/:id", rolesMiddleware("admin"), bookController.deleteBook);
 
 module.exports = router;
