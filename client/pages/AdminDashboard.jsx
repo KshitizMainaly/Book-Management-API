@@ -28,6 +28,11 @@ export default function AdminDashboard() {
     loadBooks();
   };
 
+  const handleEdit = (book) => {
+    setEditingBook(book);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
@@ -60,7 +65,7 @@ export default function AdminDashboard() {
 
               <div className="flex gap-2 mt-4">
                 <button
-                  onClick={() => setEditingBook(book)}
+                  onClick={() => handleEdit(book)}
                   className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm"
                 >
                   Edit
@@ -79,3 +84,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
