@@ -32,6 +32,10 @@ app.use("/api/v1/books", require("./routes/bookRoutes"));
 // Error handling middleware
 app.use(require("./middlewares/error"));
 
+app.get('/', (req, res) => {
+  res.send('✅ Book Management API is running. Visit the frontend!');
+});
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
