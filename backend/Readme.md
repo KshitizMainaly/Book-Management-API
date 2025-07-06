@@ -1,6 +1,5 @@
 
 # 📚 Book Management API
-
 A robust and secure RESTful API for managing books and user reviews, built with **Node.js**, **Express.js**, and **MongoDB**. Designed with clean architecture, JWT-based authentication, and role-based access control.
 
 ## 🚀 Features
@@ -78,9 +77,9 @@ API will be running at `http://localhost:5000`
 | POST   | /api/v1/books             | Create a new book(only Admin can create) 
 | PUT    | /api/v1/books/:id         | Update a book     |
 | DELETE | /api/v1/books/:id         | Delete a book      |
-| POST   | /api/v1/books/:bookId/reviews    | Add review           |
-| PUT  | /api/v1/:id    | update review           |
-| DELETE   | /api/v1/:id    | delete review           |
+| POST   | /api/v1/reviews/:bookId/    | Add review           |
+| PUT  | /api/v1/reviews/:id    | update review           |
+| DELETE   | /api/v1/reviews/:id    | delete review           |
 
 
 
