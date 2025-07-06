@@ -17,7 +17,7 @@ app.use(cors({
     'https://book-management-api-tau.vercel.app',               // main prod frontend
     'https://book-management-api-git-main-kshitizmainalys-projects.vercel.app', // preview/main branch
     'https://book-management-r4x68b03k-kshitizmainalys-projects.vercel.app',    // another preview
-    'http://localhost:3000' // for local dev
+    'http://localhost:5000' // for local dev
   ],
   credentials: true,
 }));
