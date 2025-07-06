@@ -88,7 +88,7 @@ export default function Dashboard() {
       <h1 className="text-3xl font-bold mb-8">Books & Reviews</h1>
 
       {books.length === 0 && (
-        <p className="text-gray-500">No books available.</p>
+        <p className="text-gray-500">No books available, you can login or register as an admin to create some books to view dashboard</p>
       )}
 
       <div className="space-y-12">

@@ -18,8 +18,7 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Navbar />
-
-        {/* ✅ Add this Toaster here */}
+   
         <Toaster position="top-right" reverseOrder={false} />
 
         <Routes>

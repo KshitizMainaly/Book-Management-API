@@ -1,166 +1,187 @@
 import { useState, useEffect } from 'react';
 import { createBook, updateBook } from '../services/api';
-import { toast } from 'react-hot-toast';
+
+const GENRES = [
+  "Fiction",
+  "Non-Fiction",
+  "Science Fiction",
+  "Fantasy",
+  "Mystery",
+  "Thriller",
+  "Romance",
+  "Biography",
+  "History",
+  "Self-Help",
+  "Poetry",
+  "Drama",
+  "horror",
+  "Other",
+];
 
 export default function BookForm({ book, onSuccess, onCancel }) {
-  const [formData, setFormData] = useState({
-    title: '',
-    author: '',
-    genre: 'Fiction',
-    rating: 3,
-    description: '',
-    publishedDate: '',
-  });
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [genre, setGenre] = useState('');
+  const [publishedDate, setPublishedDate] = useState('');
+  const [rating, setRating] = useState(3);
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (book) {
-      setFormData({
-        title: book.title || '',
-        author: book.author || '',
-        genre: book.genre || 'Fiction',
-        rating: book.rating || 3,
-        description: book.description || '',
-        publishedDate: book.publishedDate
-          ? new Date(book.publishedDate).toISOString().substring(0, 10)
-          : '',
-      });
+      setTitle(book.title);
+      setAuthor(book.author);
+      setGenre(book.genre);
+      setPublishedDate(book.publishedDate?.substring(0, 10) || '');
+      setRating(book.rating || 3);
+      setDescription(book.description);
     } else {
-      setFormData({
-        title: '',
-        author: '',
-        genre: 'Fiction',
-        rating: 3,
-        description: '',
-        publishedDate: '',
-      });
+      setTitle('');
+      setAuthor('');
+      setGenre('');
+      setPublishedDate('');
+      setRating(3);
+      setDescription('');
     }
   }, [book]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     try {
+      const payload = {
+        title,
+        author,
+        genre,
+        publishedDate,
+        rating,
+        description,
+      };
+
       if (book) {
-        await updateBook(book._id, formData);
-        toast.success('Book updated successfully');
+        await updateBook(book._id, payload);
       } else {
-        await createBook(formData);
-        toast.success('Book created successfully');
+        await createBook(payload);
       }
+
       onSuccess();
     } catch (err) {
-      const message =
-        err?.response?.data?.error || 'Failed to create or update book';
-      toast.error(message);
+      console.error(err);
+      if (err.response?.data?.error) {
+        setError(err.response.data.error);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-8 p-6 bg-gray-50 rounded-lg shadow-md"
+      className="max-w-4xl mx-auto mb-10 p-6 border border-gray-200 rounded-lg shadow bg-white"
     >
-      <h2 className="text-xl font-bold mb-4">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">
         {book ? 'Edit Book' : 'Add New Book'}
       </h2>
 
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block mb-1">Title</label>
+          <label className="block mb-1 font-medium text-gray-700">Title</label>
           <input
             type="text"
-            value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            className="w-full p-2 border rounded"
+            value={title}
             required
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Book Title"
           />
         </div>
 
         <div>
-          <label className="block mb-1">Author</label>
+          <label className="block mb-1 font-medium text-gray-700">Author</label>
           <input
             type="text"
-            value={formData.author}
-            onChange={(e) =>
-              setFormData({ ...formData, author: e.target.value })
-            }
-            className="w-full p-2 border rounded"
+            value={author}
             required
+            onChange={(e) => setAuthor(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Author"
           />
         </div>
 
         <div>
-          <label className="block mb-1">Genre</label>
+          <label className="block mb-1 font-medium text-gray-700">Genre</label>
           <select
-            value={formData.genre}
-            onChange={(e) =>
-              setFormData({ ...formData, genre: e.target.value })
-            }
-            className="w-full p-2 border rounded"
+            value={genre}
+            required
+            onChange={(e) => setGenre(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded bg-white"
           >
-            {[
-              'Fiction',
-              'Non-Fiction',
-              'Science Fiction',
-              'Fantasy',
-              'Mystery',
-              'Thriller',
-              'Romance',
-              'Biography',
-              'History',
-              'Self-Help',
-              'Poetry',
-              'Drama',
-              'Horror',
-              'Other',
-            ].map((genre) => (
-              <option key={genre} value={genre}>
-                {genre}
-              </option>
+            <option value="" disabled>Select genre</option>
+            {GENRES.map((g) => (
+              <option key={g} value={g}>{g}</option>
             ))}
           </select>
         </div>
 
         <div>
-          <label className="block mb-1">Published Date</label>
+          <label className="block mb-1 font-medium text-gray-700">Published Date</label>
           <input
             type="date"
-            value={formData.publishedDate}
-            onChange={(e) =>
-              setFormData({ ...formData, publishedDate: e.target.value })
-            }
-            className="w-full p-2 border rounded"
+            value={publishedDate}
             required
+            onChange={(e) => setPublishedDate(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1 font-medium text-gray-700">Rating (1–5)</label>
+          <input
+            type="number"
+            value={rating}
+            min={1}
+            max={5}
+            step={0.1}
+            required
+            onChange={(e) => setRating(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Rating"
           />
         </div>
 
         <div className="md:col-span-2">
-          <label className="block mb-1">Description</label>
+          <label className="block mb-1 font-medium text-gray-700">Description</label>
           <textarea
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            className="w-full p-2 border rounded"
-            rows="4"
+            value={description}
             required
+            rows={4}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Description"
           ></textarea>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 mt-4">
+      <div className="flex gap-2 mt-4">
         <button
           type="submit"
-          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          {book ? 'Update' : 'Create'} Book
+          {book ? 'Update Book' : 'Create Book'}
         </button>
         {book && (
           <button
             type="button"
             onClick={onCancel}
-            className="text-gray-600 hover:underline"
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
           >
             Cancel
           </button>

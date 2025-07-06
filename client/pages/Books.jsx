@@ -37,9 +37,23 @@ export default function Books() {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {books.map((book) => (
+
+
+        {books.length>0? books.map((book) => (
           <BookCard key={book._id} book={book} />
-        ))}
+        )): (
+  <h1 className="text-3xl text-center font-bold text-gray-700 py-12">
+    No Books Available — Please{" "}
+    <a href="/register" className="text-blue-600 underline hover:text-blue-800">
+      register
+    </a>{" "}
+    or{" "}
+    <a href="/login" className="text-blue-600 underline hover:text-blue-800">
+      login
+    </a>{" "}
+    as admin to create some books.
+  </h1>
+)}
       </div>
     </div>
   );
