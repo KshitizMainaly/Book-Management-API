@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+// const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
+
+const BASE_URL = import.meta.env.VITE_APP_API_URL || "https://book-management-api-gmse.onrender.com/api/v1";
 
 // Private API for authenticated routes
 const API = axios.create({
