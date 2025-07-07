@@ -2,6 +2,13 @@
 # 📚 MERN Book Review App
 
 A full-stack MERN application for managing books, reviews, user authentication, and admin controls 
+
+## 🚀 Live Demo
+
+👉 [Live Frontend](https://book-management-api-tau.vercel.app/)  
+👉 [Backend API](https://book-management-api-gmse.onrender.com/api/v1/books)
+
+
 ---
 ## 🚀 Features
 
