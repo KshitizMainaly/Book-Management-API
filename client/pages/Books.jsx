@@ -44,13 +44,7 @@ export default function Books() {
         )): (
   <h1 className="text-3xl text-center font-bold text-gray-700 py-12">
     No Books Available — Please{" "}
-    <a href="/register" className="text-blue-600 underline hover:text-blue-800">
-      register
-    </a>{" "}
-    or{" "}
-    <a href="/login" className="text-blue-600 underline hover:text-blue-800">
-      login
-    </a>{" "}
+  register or login {""} 
     as admin to create some books.
   </h1>
 )}
