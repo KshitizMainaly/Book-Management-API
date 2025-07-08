@@ -58,13 +58,12 @@ A full-stack MERN application for managing books, reviews, user authentication, 
 ## ⚙️ Installation
 
 1️⃣ Clone the repo  
-\`\`\`bash
+\`bash
 git clone <your-repo-url>
 cd your-project
-\`\`\`
+\`
 
 2️⃣ Install dependencies  
-\`\`\`bash
 # Backend
 cd backend
 npm install
@@ -72,30 +71,26 @@ npm install
 # Frontend
 cd ../frontend
 npm install
-\`\`\`
 
 3️⃣ Create .env files  
 - backend/.env:
-  \`\`\`env
+  \`
   PORT=5000
   MONGO_URI=<your-local-or-atlas-uri>
   JWT_SECRET=your_secret
   JWT_EXPIRE=30d
-  \`\`\`
+  \`
 
 - frontend/.env (if needed for proxy):
-  \`\`\`env
   VITE_API_URL=http://localhost:5000/api/v1
-  \`\`\`
+  VITE_APP_AUTH_TOKEN:your_token
 
 4️⃣ Run development  
-\`\`\`bash
 # In backend
 npm run dev
 
 # In frontend
 npm run dev
-\`\`\`
 
 ## ✅ Author
 
