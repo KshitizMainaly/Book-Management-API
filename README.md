@@ -15,11 +15,17 @@ A full-stack MERN application for managing books, reviews, user authentication, 
 - **Landing Page**
   ![HomePage/booksList](screenshots/home.png)
 
-- **Books List**
+- **AdminDashboarb Page**
+  ![adminDashboard](screenshots/adminDashboard.png)
+
+
+- **UserDashboarb Page**
   ![userDashboard](screenshots/userDashboard.png)
 
-- **Login Page**
+
+- **Review Page**
   ![ReviewPage](screenshots/ReviewSection.png)
+
 
 
 ## 🚀 Features
