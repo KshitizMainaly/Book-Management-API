@@ -12,6 +12,7 @@ const app = express();
 connectDB();
 
 // Middlewares
+//only this is needed for production, not for local development
 app.use(cors({
   origin: [
     'https://book-management-api-tau.vercel.app',               // main prod frontend
@@ -21,6 +22,10 @@ app.use(cors({
   ],
   credentials: true,
 }));
+
+// if you are comming from git clone and want to run the project locally, you can comment the above cors middleware and uncomment the below one   
+// app.use(cors()); // Enable CORS for all origins (for local development only, not recommended for production)
+
 
 app.use(helmet());
 app.use(morgan("dev"));
