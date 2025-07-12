@@ -12,7 +12,7 @@ export default function ReviewForm({ bookId, onSubmit }) {
   if (!user) {
     return (
       <div className="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded">
-        Please <a href="/login" className="underline text-blue-600">log in</a> or{" "}
+        Please <span className="underline text-blue-600">log in</span> or{" "}
         <a href="/register" className="underline text-blue-600">register</a> to submit a review.
       </div>
     );
