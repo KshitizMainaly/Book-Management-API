@@ -55,9 +55,9 @@ export default function Login() {
         </form>
         <p className="mt-4 text-center text-gray-400">
           New user?{" "}
-          <a href="/register" className="text-blue-400 hover:underline">
-            Register here
-          </a>
+          <span className="text-blue-400 ">
+            You can always register
+          </span>
         </p>
       </div>
     </div>
